@@ -6,47 +6,47 @@ import java.util.List;
 
 public class TopPlayers {
 
-    private List<PlayerGoals> players;
-    private int limit;
+  private List<PlayerGoals> players;
+  private int limit;
 
-    private TopPlayers() {
+  private TopPlayers() {
+  }
+
+  public TopPlayers(int limit) {
+    this.limit = limit;
+    this.players = new ArrayList<>(limit + 1);
+  }
+
+  public TopPlayers aggregate(PlayerGoals playerGoals) {
+    upsert(playerGoals);
+    players.sort(Comparator.comparingInt(PlayerGoals::getGoals).reversed());
+
+    if (players.size() > limit) {
+      players.remove(limit); // remove last
     }
+    return this;
+  }
 
-    public TopPlayers(int limit) {
-        this.limit = limit;
-        this.players = new ArrayList<>(limit + 1);
+  private void upsert(PlayerGoals newItem) {
+    for (PlayerGoals existing : players) {
+      if (existing.getPlayerId().equals(newItem.getPlayerId())) {
+        existing.setGoals(newItem.getGoals());
+        return;
+      }
     }
+    players.add(newItem);
+  }
 
-    public TopPlayers aggregate(PlayerGoals playerGoals) {
-        upsert(playerGoals);
-        players.sort(Comparator.comparingInt(PlayerGoals::getGoals).reversed());
+  public List<PlayerGoals> getPlayers() {
+    return players;
+  }
 
-        if (players.size() > limit) {
-            players.remove(limit); // remove last
-        }
-        return this;
-    }
+  public int getLimit() {
+    return limit;
+  }
 
-    private void upsert(PlayerGoals newItem) {
-        for (PlayerGoals existing : players) {
-            if (existing.getPlayerId().equals(newItem.getPlayerId())) {
-                existing.setGoals(newItem.getGoals());
-                return;
-            }
-        }
-        players.add(newItem);
-    }
-
-    public List<PlayerGoals> getPlayers() {
-        return players;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    @Override
-    public String toString() {
-        return players.toString();
-    }
+  @Override
+  public String toString() {
+    return players.toString();
+  }
 }

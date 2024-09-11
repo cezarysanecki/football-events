@@ -15,38 +15,38 @@ import reactor.core.publisher.Flux;
 @RequestMapping(path = "/ui", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StatisticsController {
 
-    private final StateStoreRepository<MatchScore> matchScoreRepo;
-    private final StateStoreRepository<TeamRanking> teamRankingRepo;
-    private final StateStoreRepository<PlayerCards> playerCardsRepo;
-    private final StateStoreRepository<PlayerGoals> playerGoalsRepo;
+  private final StateStoreRepository<MatchScore> matchScoreRepo;
+  private final StateStoreRepository<TeamRanking> teamRankingRepo;
+  private final StateStoreRepository<PlayerCards> playerCardsRepo;
+  private final StateStoreRepository<PlayerGoals> playerGoalsRepo;
 
-    public StatisticsController(StateStoreRepository<MatchScore> matchScoreRepo,
-            StateStoreRepository<TeamRanking> teamRankingRepo,
-            StateStoreRepository<PlayerGoals> playerGoalsRepo,
-            StateStoreRepository<PlayerCards> playerCardsRepo) {
-        this.matchScoreRepo = matchScoreRepo;
-        this.teamRankingRepo = teamRankingRepo;
-        this.playerGoalsRepo = playerGoalsRepo;
-        this.playerCardsRepo = playerCardsRepo;
-    }
+  public StatisticsController(StateStoreRepository<MatchScore> matchScoreRepo,
+                              StateStoreRepository<TeamRanking> teamRankingRepo,
+                              StateStoreRepository<PlayerGoals> playerGoalsRepo,
+                              StateStoreRepository<PlayerCards> playerCardsRepo) {
+    this.matchScoreRepo = matchScoreRepo;
+    this.teamRankingRepo = teamRankingRepo;
+    this.playerGoalsRepo = playerGoalsRepo;
+    this.playerCardsRepo = playerCardsRepo;
+  }
 
-    @GetMapping("/matchScores")
-    public Flux<MatchScore> getMatchScores() {
-        return matchScoreRepo.findAll();
-    }
+  @GetMapping("/matchScores")
+  public Flux<MatchScore> getMatchScores() {
+    return matchScoreRepo.findAll();
+  }
 
-    @GetMapping("/rankings")
-    public Flux<TeamRanking> getRankings() {
-        return teamRankingRepo.findAll();
-    }
+  @GetMapping("/rankings")
+  public Flux<TeamRanking> getRankings() {
+    return teamRankingRepo.findAll();
+  }
 
-    @GetMapping("/goals")
-    public Flux<PlayerGoals> getGoals() {
-        return playerGoalsRepo.findAll();
-    }
+  @GetMapping("/goals")
+  public Flux<PlayerGoals> getGoals() {
+    return playerGoalsRepo.findAll();
+  }
 
-    @GetMapping("/cards")
-    public Flux<PlayerCards> getCards() {
-        return playerCardsRepo.findAll();
-    }
+  @GetMapping("/cards")
+  public Flux<PlayerCards> getCards() {
+    return playerCardsRepo.findAll();
+  }
 }

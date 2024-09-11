@@ -5,25 +5,25 @@ import java.time.ZoneOffset;
 
 public abstract class Event {
 
-    private final EventMetadata metadata = new EventMetadata();
+  private final EventMetadata metadata = new EventMetadata();
 
-    public abstract String getAggId();
+  public abstract String getAggId();
 
-    public EventMetadata getMetadata() {
-        return metadata;
-    }
+  public EventMetadata getMetadata() {
+    return metadata;
+  }
 
-    public Event timestamp(long timestamp) {
-        metadata.setTimestamp(timestamp);
-        return this;
-    }
+  public Event timestamp(long timestamp) {
+    metadata.setTimestamp(timestamp);
+    return this;
+  }
 
-    public Event timestamp(LocalDateTime timestamp) {
-        return timestamp(timestamp.toInstant(ZoneOffset.of("Z")).toEpochMilli());
-    }
+  public Event timestamp(LocalDateTime timestamp) {
+    return timestamp(timestamp.toInstant(ZoneOffset.of("Z")).toEpochMilli());
+  }
 
-    @Override
-    public String toString() {
-        return String.valueOf(metadata);
-    }
+  @Override
+  public String toString() {
+    return String.valueOf(metadata);
+  }
 }

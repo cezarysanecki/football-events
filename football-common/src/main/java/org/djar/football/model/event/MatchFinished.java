@@ -4,26 +4,26 @@ import java.util.Objects;
 
 public class MatchFinished extends Event {
 
-    private String matchId;
+  private String matchId;
 
-    private MatchFinished() {
-    }
+  private MatchFinished() {
+  }
 
-    public MatchFinished(String matchId) {
-        this.matchId = Objects.requireNonNull(matchId);
-    }
+  public MatchFinished(String matchId) {
+    this.matchId = Objects.requireNonNull(matchId);
+  }
 
-    @Override
-    public String getAggId() {
-        return matchId;
-    }
+  @Override
+  public String getAggId() {
+    return matchId;
+  }
 
-    public String getMatchId() {
-        return matchId;
-    }
+  public String getMatchId() {
+    return matchId;
+  }
 
-    @Override
-    public String toString() {
-        return matchId;
-    }
+  @Override
+  public String toString() {
+    return matchId;
+  }
 }

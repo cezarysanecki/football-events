@@ -13,17 +13,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
-    @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
-        logger.error(request.getContextPath(), ex);
-        return new ResponseEntity<>(ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND);
-    }
+  @ExceptionHandler({NotFoundException.class})
+  public ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
+    logger.error(request.getContextPath(), ex);
+    return new ResponseEntity<>(ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND);
+  }
 
-    @ExceptionHandler({InvalidContentException.class})
-    public ResponseEntity<Object> handleValidation(Exception ex, WebRequest request) {
-        logger.error(request.getContextPath(), ex);
-        return new ResponseEntity<>(ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
-    }
+  @ExceptionHandler({InvalidContentException.class})
+  public ResponseEntity<Object> handleValidation(Exception ex, WebRequest request) {
+    logger.error(request.getContextPath(), ex);
+    return new ResponseEntity<>(ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
+  }
 }

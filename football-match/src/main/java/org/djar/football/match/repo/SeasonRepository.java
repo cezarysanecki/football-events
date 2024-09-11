@@ -4,10 +4,10 @@ import org.djar.football.match.domain.Season;
 
 public class SeasonRepository {
 
-    private final Season defaultSeason = new Season("1", "Season 1");
+  private final Season defaultSeason = new Season("1", "Season 1");
 
-    public Season getDefault() {
-        return defaultSeason;
-    }
+  public Season getDefault() {
+    return defaultSeason;
+  }
 
 }
