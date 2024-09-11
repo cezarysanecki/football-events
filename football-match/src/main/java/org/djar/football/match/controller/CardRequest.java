@@ -10,9 +10,6 @@ public class CardRequest {
     private String receiverId;
     private String type;
 
-    private CardRequest() {
-    }
-
     public CardRequest(String id, int minute, String receiverId, String type, LocalDateTime reqTimestamp) {
         this.id = id;
         this.minute = minute;

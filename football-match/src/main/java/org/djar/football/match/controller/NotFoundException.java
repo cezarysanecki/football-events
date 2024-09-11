@@ -2,7 +2,7 @@ package org.djar.football.match.controller;
 
 public class NotFoundException extends RuntimeException {
 
-    private Object id;
+    private final Object id;
 
     public NotFoundException(String message, Object id) {
         super(message + ": " + id);

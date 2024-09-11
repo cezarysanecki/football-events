@@ -4,14 +4,11 @@ import java.util.Objects;
 
 public class Goal {
 
-    private String id;
-    private String matchId;
-    private int minute;
-    private String scorerId;
-    private Team scoredFor;
-
-    private Goal() {
-    }
+    private final String id;
+    private final String matchId;
+    private final int minute;
+    private final String scorerId;
+    private final Team scoredFor;
 
     Goal(String id, String matchId, int minute, String scorerId, Team scoredFor) {
         this.id = Objects.requireNonNull(id);

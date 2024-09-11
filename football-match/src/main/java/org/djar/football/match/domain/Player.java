@@ -4,11 +4,8 @@ import java.util.Objects;
 
 public class Player {
 
-    private String id;
-    private String name;
-
-    private Player() {
-    }
+    private final String id;
+    private final String name;
 
     Player(String id, String name) {
         this.id = Objects.requireNonNull(id);

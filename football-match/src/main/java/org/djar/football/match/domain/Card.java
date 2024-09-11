@@ -8,14 +8,11 @@ public class Card {
         YELLOW, RED
     }
 
-    private String id;
-    private String matchId;
-    private int minute;
-    private String receiverId;
-    private Type type;
-
-    private Card() {
-    }
+    private final String id;
+    private final String matchId;
+    private final int minute;
+    private final String receiverId;
+    private final Type type;
 
     Card(String id, String matchId, int minute, String receiverId, Type type) {
         this.id = Objects.requireNonNull(id);

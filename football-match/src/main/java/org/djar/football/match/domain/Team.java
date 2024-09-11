@@ -1,15 +1,8 @@
 package org.djar.football.match.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Team {
 
-    private String clubId;
-    private Set<String> memberIds = new HashSet<>();
-
-    private Team() {
-    }
+    private final String clubId;
 
     Team(String clubId) {
         this.clubId = clubId;
@@ -19,11 +12,4 @@ public class Team {
         return clubId;
     }
 
-    public boolean isMember(Player player) {
-        return memberIds.contains(player.getId());
-    }
-
-    public void addMember(Player player) {
-        memberIds.add(player.getId());
-    }
 }

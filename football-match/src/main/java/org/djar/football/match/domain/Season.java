@@ -3,25 +3,11 @@ package org.djar.football.match.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Season {
+public record Season(String id, String name) {
 
-    private String id;
-    private String name;
-
-    private Season() {
-    }
-
-    Season(String id, String name) {
+    public Season(String id, String name) {
         this.id = Objects.requireNonNull(id);
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Match scheduleMatch(String matchId, LocalDateTime date, String homeClubId, String awayClubId) {

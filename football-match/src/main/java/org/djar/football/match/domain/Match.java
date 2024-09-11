@@ -11,19 +11,17 @@ public class Match {
         SCHEDULED, STARTED, FINISHED, CANCELLED;
     }
 
-    private String id;
-    private String leagueId;
-    private LocalDateTime date;
-    private Team homeTeam;
-    private Team awayTeam;
+    private final String id;
+    private final String leagueId;
+    private final LocalDateTime date;
+    private final Team homeTeam;
+    private final Team awayTeam;
     private State state;
 
-    private List<Goal> homeGoals = new ArrayList<>();
-    private List<Goal> awayGoals = new ArrayList<>();
-    private List<Card> cards = new ArrayList<>();
+    private final List<Goal> homeGoals = new ArrayList<>();
+    private final List<Goal> awayGoals = new ArrayList<>();
+    private final List<Card> cards = new ArrayList<>();
 
-    private Match() {
-    }
 
     Match(String id, String leagueId, LocalDateTime date, Team homeTeam, Team awayTeam) {
         this.id = Objects.requireNonNull(id);
@@ -84,14 +82,7 @@ public class Match {
         state = State.FINISHED;
     }
 
-    public void cancel() {
-        if (state == State.FINISHED) {
-            throw new IllegalStateException("Cannot cancel match that is already finished");
-        }
-        state = State.CANCELLED;
-    }
-
-    public Goal newGoal(String goalId, int minute, String scorerId, String scoredForId) {
+    public void newGoal(String goalId, int minute, String scorerId, String scoredForId) {
         Goal goal;
 
         if (scoredForId.equals(homeTeam.getClubId())) {
@@ -103,18 +94,15 @@ public class Match {
         } else {
             throw new IllegalArgumentException("Invalid team id: " + scoredForId);
         }
-        return goal;
     }
 
-    public Card newRedCard(String cardId, int minute, String receiveId) {
+    public void newRedCard(String cardId, int minute, String receiveId) {
         Card card = new Card(cardId, id, minute, receiveId, Card.Type.RED);
         cards.add(card);
-        return card;
     }
 
-    public Card newYellowCard(String cardId, int minute, String receiveId) {
+    public void newYellowCard(String cardId, int minute, String receiveId) {
         Card card = new Card(cardId, id, minute, receiveId, Card.Type.YELLOW);
         cards.add(card);
-        return card;
     }
 }

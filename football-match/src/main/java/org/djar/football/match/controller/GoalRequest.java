@@ -9,9 +9,6 @@ public class GoalRequest {
     private int minute;
     private String scorerId;
 
-    private GoalRequest() {
-    }
-
     public GoalRequest(String id, int minute, String scorerId, LocalDateTime reqTimestamp) {
         this.id = id;
         this.minute = minute;

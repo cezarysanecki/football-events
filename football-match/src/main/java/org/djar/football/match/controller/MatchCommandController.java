@@ -1,7 +1,5 @@
 package org.djar.football.match.controller;
 
-import static org.djar.football.match.domain.Match.State;
-
 import org.djar.football.match.domain.Match;
 import org.djar.football.match.domain.Player;
 import org.djar.football.model.event.CardReceived;
@@ -24,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+
+import static org.djar.football.match.domain.Match.State;
 
 @RestController
 @RequestMapping(path = "/command", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,7 +81,7 @@ public class MatchCommandController {
         return Mono.<Event>create(sink -> {
             Match match = findRelatedMatch(matchId);
             Player scorer = playerRepository.find(request.getScorerId()).orElseThrow(
-                    () -> new InvalidContentExeption("Player not found", request.getScorerId()));
+                    () -> new InvalidContentException("Player not found", request.getScorerId()));
             Event event = new GoalScored(request.getId(), matchId, request.getMinute(), scorer.getId(),
                     match.getHomeTeam().getClubId())
                     .timestamp(request.getReqTimestamp());
@@ -96,7 +96,7 @@ public class MatchCommandController {
         return Mono.<Event>create(sink -> {
             Match match = findRelatedMatch(matchId);
             Player scorer = playerRepository.find(request.getScorerId()).orElseThrow(
-                    () -> new InvalidContentExeption("Player not found", request.getScorerId()));
+                    () -> new InvalidContentException("Player not found", request.getScorerId()));
             Event event = new GoalScored(request.getId(), matchId, request.getMinute(), scorer.getId(),
                     match.getAwayTeam().getClubId())
                     .timestamp(request.getReqTimestamp());
@@ -109,9 +109,8 @@ public class MatchCommandController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Mono<Void> receiveCard(@PathVariable String matchId, @RequestBody CardRequest request) {
         return Mono.<Event>create(sink -> {
-            Match match = findRelatedMatch(matchId);
             Player receiver = playerRepository.find(request.getReceiverId()).orElseThrow(
-                    () -> new InvalidContentExeption("Player not found", request.getReceiverId()));
+                    () -> new InvalidContentException("Player not found", request.getReceiverId()));
             Event event = new CardReceived(request.getId(), matchId, request.getMinute(), receiver.getId(),
                     CardReceived.Type.valueOf(request.getType()))
                     .timestamp(request.getReqTimestamp());
@@ -125,7 +124,7 @@ public class MatchCommandController {
                 () -> new NotFoundException("Match not found", matchId));
 
         if (match.getState() != State.STARTED) {
-            throw new InvalidContentExeption("Match state must be " + State.STARTED + " instead of "
+            throw new InvalidContentException("Match state must be " + State.STARTED + " instead of "
                     + match.getState(), matchId);
         }
         return match;

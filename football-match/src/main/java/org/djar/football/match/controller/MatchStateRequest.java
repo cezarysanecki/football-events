@@ -7,9 +7,6 @@ public class MatchStateRequest {
     private String newState;
     private LocalDateTime reqTimestamp;
 
-    private MatchStateRequest() {
-    }
-
     public MatchStateRequest(String newState, LocalDateTime reqTimestamp) {
         this.newState = newState;
         this.reqTimestamp = reqTimestamp;
