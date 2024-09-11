@@ -30,27 +30,27 @@ public class DomainUpdater {
   }
 
   public void init(Topology topology) {
-    addProcessor(topology, MatchScheduled.class, (_, event, store) -> {
+    addProcessor(topology, MatchScheduled.class, (eventId, event, store) -> {
       Season season = seasonRepository.getDefault();
       Match match = season.scheduleMatch(event.getMatchId(), event.getDate(), event.getHomeClubId(),
           event.getAwayClubId());
       store.put(match.getId(), match);
     }, MATCH_STORE);
 
-    addProcessor(topology, MatchStarted.class, (_, event, store) -> {
+    addProcessor(topology, MatchStarted.class, (eventId, event, store) -> {
       Match match = findMatch(store, event.getMatchId());
       match.start();
       store.put(match.getId(), match);
     }, MATCH_STORE);
 
-    addProcessor(topology, GoalScored.class, (_, event, store) -> {
+    addProcessor(topology, GoalScored.class, (eventId, event, store) -> {
       Match match = findMatch(store, event.getMatchId());
       match.newGoal(event.getGoalId(), event.getMinute(), event.getScorerId(),
           event.getScoredFor());
       store.put(match.getId(), match);
     }, MATCH_STORE);
 
-    addProcessor(topology, CardReceived.class, (_, event, store) -> {
+    addProcessor(topology, CardReceived.class, (eventId, event, store) -> {
       Match match = findMatch(store, event.getMatchId());
 
       if (event.getType() == CardReceived.Type.RED) {
@@ -63,14 +63,14 @@ public class DomainUpdater {
       store.put(match.getId(), match);
     }, MATCH_STORE);
 
-    addProcessor(topology, MatchFinished.class, (_, event, store) -> {
+    addProcessor(topology, MatchFinished.class, (eventId, event, store) -> {
       Match match = (Match) Objects.requireNonNull(store.get(event.getMatchId()),
           "Match not found: " + event.getMatchId());
       match.finish();
       store.put(match.getId(), match);
     }, MATCH_STORE);
 
-    addProcessor(topology, PlayerStartedCareer.class, (_, event, store) -> {
+    addProcessor(topology, PlayerStartedCareer.class, (eventId, event, store) -> {
       Season season = seasonRepository.getDefault();
       Player player = season.startCareer(event.getPlayerId(), event.getName());
       store.put(player.getId(), player);

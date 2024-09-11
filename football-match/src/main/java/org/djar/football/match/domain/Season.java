@@ -3,7 +3,10 @@ package org.djar.football.match.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public record Season(String id, String name) {
+public class Season {
+
+  private final String id;
+  private final String name;
 
   public Season(String id, String name) {
     this.id = Objects.requireNonNull(id);
