@@ -31,7 +31,7 @@ public class SnapshotBuilderTest {
         ReadOnlyKeyValueStore<String, Player> playerStore = tester.getStore(DomainUpdater.PLAYER_STORE);
 
         assertThat(tester.count(playerStore)).isEqualTo(4);
-        assertThat(playerStore.get("2").getName()).isEqualTo("James Henry");
+        assertThat(playerStore.get("2").name()).isEqualTo("James Henry");
     }
 
     @After
