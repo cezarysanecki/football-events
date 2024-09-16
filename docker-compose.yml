@@ -47,7 +47,7 @@ services:
       POSTGRES_PASSWORD: postgres
 
   connect:
-    image: debezium/connect:latest
+    image: debezium/connect:1.8
     container_name: connect
     ports:
      - 8083:8083
