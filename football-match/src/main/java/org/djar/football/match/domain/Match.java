@@ -1,12 +1,16 @@
 package org.djar.football.match.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(force = true)
 public class Match {
 
@@ -19,56 +23,11 @@ public class Match {
     private final LocalDateTime date;
     private final Team homeTeam;
     private final Team awayTeam;
-    private State state;
+    private State state = State.SCHEDULED;
 
     private final List<Goal> homeGoals = new ArrayList<>();
     private final List<Goal> awayGoals = new ArrayList<>();
     private final List<Card> cards = new ArrayList<>();
-
-    Match(String id, String leagueId, LocalDateTime date, Team homeTeam, Team awayTeam) {
-        this.id = Objects.requireNonNull(id);
-        this.leagueId = Objects.requireNonNull(leagueId);
-        this.date = Objects.requireNonNull(date);
-        this.homeTeam = Objects.requireNonNull(homeTeam);
-        this.awayTeam = Objects.requireNonNull(awayTeam);
-        this.state = State.SCHEDULED;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getLeagueId() {
-        return leagueId;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public Team getHomeTeam() {
-        return homeTeam;
-    }
-
-    public Team getAwayTeam() {
-        return awayTeam;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public List<Goal> getHomeGoals() {
-        return homeGoals;
-    }
-
-    public List<Goal> getAwayGoals() {
-        return awayGoals;
-    }
-
-    public List<Card> getCards() {
-        return cards;
-    }
 
     public void start() {
         if (state != State.SCHEDULED) {
@@ -85,14 +44,10 @@ public class Match {
     }
 
     public void newGoal(String goalId, int minute, String scorerId, String scoredForId) {
-        Goal goal;
-
         if (scoredForId.equals(homeTeam.getClubId())) {
-            goal = new Goal(goalId, id, minute, scorerId, homeTeam);
-            homeGoals.add(goal);
+            homeGoals.add(new Goal(goalId, id, minute, scorerId, homeTeam));
         } else if (scoredForId.equals(awayTeam.getClubId())) {
-            goal = new Goal(goalId, id, minute, scorerId, awayTeam);
-            awayGoals.add(goal);
+            awayGoals.add(new Goal(goalId, id, minute, scorerId, awayTeam));
         } else {
             throw new IllegalArgumentException("Invalid team id: " + scoredForId);
         }

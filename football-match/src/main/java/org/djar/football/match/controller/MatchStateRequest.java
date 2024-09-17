@@ -1,30 +1,15 @@
 package org.djar.football.match.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
 public class MatchStateRequest {
 
     private String newState;
     private LocalDateTime reqTimestamp;
 
-    public MatchStateRequest(String newState, LocalDateTime reqTimestamp) {
-        this.newState = newState;
-        this.reqTimestamp = reqTimestamp;
-    }
-
-    public String getNewState() {
-        return newState;
-    }
-
-    public void setNewState(String newState) {
-        this.newState = newState;
-    }
-
-    public LocalDateTime getReqTimestamp() {
-        return reqTimestamp;
-    }
-
-    public void setReqTimestamp(LocalDateTime reqTimestamp) {
-        this.reqTimestamp = reqTimestamp;
-    }
 }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-class Team {
+public class Team {
 
     private final String clubId;
 
