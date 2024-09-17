@@ -8,7 +8,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
 import org.djar.football.model.event.PlayerStartedCareer;
-import org.djar.football.stream.EventPublisher;
 import org.djar.football.stream.JsonNodeSerde;
 import org.djar.football.stream.JsonPojoSerde;
 import org.djar.football.util.Topics;
@@ -21,12 +20,8 @@ public class PlayerCommandConnector {
 
     private static final String CONNECT_PLAYERS_TOPIC = "fb-connect.public.players";
     private static final String PLAYER_STARTED_CAREER_TOPIC = Topics.eventTopicName(PlayerStartedCareer.class);
-
-    private final EventPublisher eventPublisher;
-
-    public PlayerCommandConnector(EventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
-    }
+    public static final char CREATE_OPERATION = 'c';
+    public static final char READ_OPERATION = 'r';
 
     public void build(StreamsBuilder builder) {
         KStream<byte[], JsonNode> playerSourceStream = builder.stream(
@@ -55,8 +50,7 @@ public class PlayerCommandConnector {
     private boolean creationOrSnapshot(JsonNode json) {
         char op = json.get("payload").get("op").textValue().charAt(0);
 
-        // c - create (insert), r - read (in the case of a snapshot)
-        if (op == 'c' || op == 'r') {
+        if (op == CREATE_OPERATION || op == READ_OPERATION) {
             return true;
         }
         logger.warn("Unsupported operation type '{}' - skipped", op);
@@ -68,7 +62,6 @@ public class PlayerCommandConnector {
         int playerId = after.get("id").intValue();
         String playerName = after.get("name").textValue();
         PlayerStartedCareer event = new PlayerStartedCareer(String.valueOf(playerId), playerName);
-        eventPublisher.fillOut(event);
         logger.debug("New {} event created: {}", event.getClass().getSimpleName(), event.getAggId());
         return event;
     }

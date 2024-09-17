@@ -1,14 +1,21 @@
 package org.djar.football.model.event;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
-public class PlayerStartedCareer extends Event {
+@Getter
+@NoArgsConstructor(force = true)
+public class PlayerStartedCareer implements Event {
 
-    private String playerId;
-    private String name;
+    private final UUID eventId = UUID.randomUUID();
+    private final Instant timestamp = Instant.now();
 
-    private PlayerStartedCareer() {
-    }
+    private final String playerId;
+    private final String name;
 
     public PlayerStartedCareer(String playerId, String name) {
         this.playerId = Objects.requireNonNull(playerId);
@@ -20,12 +27,14 @@ public class PlayerStartedCareer extends Event {
         return playerId;
     }
 
-    public String getPlayerId() {
-        return playerId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public Instant getTimestamp() {
+        return timestamp;
     }
 
     @Override

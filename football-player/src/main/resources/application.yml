@@ -3,5 +3,3 @@ server:
 
 kafka:
   bootstrapAddress: kafka:9092
-
-apiVersion: 1

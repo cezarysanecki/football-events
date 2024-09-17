@@ -1,21 +1,28 @@
 package org.djar.football.model.event;
 
-import java.util.Objects;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class CardReceived extends Event {
+import java.time.Instant;
+import java.util.Objects;
+import java.util.UUID;
+
+@Getter
+@NoArgsConstructor(force = true)
+public class CardReceived implements Event {
 
     public enum Type {
         YELLOW, RED
     }
 
-    private String cardId;
-    private String matchId;
-    private int minute;
-    private String receiverId;
-    private Type type;
+    private final UUID eventId = UUID.randomUUID();
+    private final Instant timestamp = Instant.now();
 
-    private CardReceived() {
-    }
+    private final String cardId;
+    private final String matchId;
+    private final int minute;
+    private final String receiverId;
+    private final Type type;
 
     public CardReceived(String cardId, String matchId, int minute, String receiverId, Type type) {
         this.cardId = Objects.requireNonNull(cardId);
@@ -30,24 +37,14 @@ public class CardReceived extends Event {
         return matchId;
     }
 
-    public String getCardId() {
-        return cardId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getMatchId() {
-        return matchId;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public String getReceiverId() {
-        return receiverId;
-    }
-
-    public Type getType() {
-        return type;
+    @Override
+    public Instant getTimestamp() {
+        return timestamp;
     }
 
     @Override

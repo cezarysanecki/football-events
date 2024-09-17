@@ -35,9 +35,6 @@ public class MatchApplication {
     @Value("${kafka.bootstrapAddress}")
     private String kafkaBootstrapAddress;
 
-    @Value("${apiVersion}")
-    private int apiVersion;
-
     @Value("${kafkaTimeout:60000}")
     private long kafkaTimeout;
 
@@ -64,7 +61,7 @@ public class MatchApplication {
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonPojoSerde.class.getName());
         producerProps.put(ProducerConfig.CLIENT_ID_CONFIG, APP_ID);
         var kafkaProducer = new KafkaProducer<String, Event>(producerProps);
-        return new EventPublisher(kafkaProducer, APP_ID, apiVersion);
+        return new EventPublisher(kafkaProducer);
     }
 
     @Bean

@@ -1,17 +1,24 @@
 package org.djar.football.model.event;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
-public class GoalScored extends Event {
+@Getter
+@NoArgsConstructor(force = true)
+public class GoalScored implements Event {
 
-    private String goalId;
-    private String matchId;
-    private int minute;
-    private String scorerId;
-    private String scoredFor;
+    private final UUID eventId = UUID.randomUUID();
+    private final Instant timestamp = Instant.now();
 
-    private GoalScored() {
-    }
+    private final String goalId;
+    private final String matchId;
+    private final int minute;
+    private final String scorerId;
+    private final String scoredFor;
 
     public GoalScored(String goalId, String matchId, int minute, String scorerId, String scoredFor) {
         this.goalId = Objects.requireNonNull(goalId, "Null goal id");
@@ -26,24 +33,14 @@ public class GoalScored extends Event {
         return matchId;
     }
 
-    public String getGoalId() {
-        return goalId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getMatchId() {
-        return matchId;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public String getScorerId() {
-        return scorerId;
-    }
-
-    public String getScoredFor() {
-        return scoredFor;
+    @Override
+    public Instant getTimestamp() {
+        return timestamp;
     }
 
     @Override

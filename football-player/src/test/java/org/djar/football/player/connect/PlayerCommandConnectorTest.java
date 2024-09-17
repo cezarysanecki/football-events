@@ -5,7 +5,6 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.djar.football.model.event.PlayerStartedCareer;
-import org.djar.football.stream.EventPublisher;
 import org.djar.football.stream.JsonPojoSerde;
 import org.djar.football.test.StreamsTester;
 import org.djar.football.util.Topics;
@@ -21,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PlayerCommandConnectorTest {
 
     private StreamsTester tester;
-    private PlayerCommandConnector producer;
 
     @Before
     public void setUp() {
@@ -29,7 +27,7 @@ public class PlayerCommandConnectorTest {
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
 
-        producer = new PlayerCommandConnector(new EventPublisher(null, getClass().getSimpleName(), 1));
+        PlayerCommandConnector producer = new PlayerCommandConnector();
         producer.build(streamsBuilder);
 
         Topology topology = streamsBuilder.build();

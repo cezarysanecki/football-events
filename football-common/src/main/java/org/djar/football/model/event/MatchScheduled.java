@@ -1,18 +1,25 @@
 package org.djar.football.model.event;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
-public class MatchScheduled extends Event {
+@Getter
+@NoArgsConstructor(force = true)
+public class MatchScheduled implements Event {
 
-    private String matchId;
-    private String seasonId; // unused
-    private LocalDateTime date;
-    private String homeClubId;
-    private String awayClubId;
+    private final UUID eventId = UUID.randomUUID();
+    private final Instant timestamp = Instant.now();
 
-    private MatchScheduled() {
-    }
+    private final String matchId;
+    private final String seasonId;
+    private final LocalDateTime date;
+    private final String homeClubId;
+    private final String awayClubId;
 
     public MatchScheduled(String matchId, String seasonId, LocalDateTime date, String homeClubId, String awayClubId) {
         this.matchId = Objects.requireNonNull(matchId);
@@ -27,24 +34,14 @@ public class MatchScheduled extends Event {
         return matchId;
     }
 
-    public String getMatchId() {
-        return matchId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getSeasonId() {
-        return seasonId;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public String getHomeClubId() {
-        return homeClubId;
-    }
-
-    public String getAwayClubId() {
-        return awayClubId;
+    @Override
+    public Instant getTimestamp() {
+        return timestamp;
     }
 
     @Override

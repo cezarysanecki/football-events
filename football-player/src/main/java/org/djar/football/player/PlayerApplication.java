@@ -32,9 +32,6 @@ public class PlayerApplication {
     @Value("${kafka.bootstrapAddress}")
     private String kafkaBootstrapAddress;
 
-    @Value("${apiVersion}")
-    private int apiVersion;
-
     @Value("${kafkaTimeout:60000}")
     private long kafkaTimeout;
 
@@ -46,7 +43,7 @@ public class PlayerApplication {
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         Topology topology = streamsBuilder.build();
         new DomainUpdater().init(topology);
-        new PlayerCommandConnector(eventPublisher()).build(streamsBuilder);
+        new PlayerCommandConnector().build(streamsBuilder);
         KafkaStreamsStarter starter = new KafkaStreamsStarter(kafkaBootstrapAddress, topology, APP_ID);
         starter.setKafkaTimeout(kafkaTimeout);
         starter.setStreamsStartupTimeout(streamsStartupTimeout);
@@ -61,7 +58,7 @@ public class PlayerApplication {
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonPojoSerde.class.getName());
         producerProps.put(ProducerConfig.CLIENT_ID_CONFIG, APP_ID);
         var kafkaProducer = new KafkaProducer<String, Event>(producerProps);
-        return new EventPublisher(kafkaProducer, APP_ID, apiVersion);
+        return new EventPublisher(kafkaProducer);
     }
 
     public static void main(String[] args) {

@@ -1,13 +1,20 @@
 package org.djar.football.model.event;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
-public class MatchFinished extends Event {
+@Getter
+@NoArgsConstructor(force = true)
+public class MatchFinished implements Event {
 
-    private String matchId;
+    private final UUID eventId = UUID.randomUUID();
+    private final Instant timestamp = Instant.now();
 
-    private MatchFinished() {
-    }
+    private final String matchId;
 
     public MatchFinished(String matchId) {
         this.matchId = Objects.requireNonNull(matchId);
@@ -18,8 +25,14 @@ public class MatchFinished extends Event {
         return matchId;
     }
 
-    public String getMatchId() {
-        return matchId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
+    }
+
+    @Override
+    public Instant getTimestamp() {
+        return timestamp;
     }
 
     @Override

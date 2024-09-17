@@ -1,29 +1,13 @@
 package org.djar.football.model.event;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
+import java.util.UUID;
 
-public abstract class Event {
+public interface Event {
 
-    private final EventMetadata metadata = new EventMetadata();
+    String getAggId();
 
-    public abstract String getAggId();
+    UUID getEventId();
 
-    public EventMetadata getMetadata() {
-        return metadata;
-    }
-
-    public Event timestamp(long timestamp) {
-        metadata.setTimestamp(timestamp);
-        return this;
-    }
-
-    public Event timestamp(LocalDateTime timestamp) {
-        return timestamp(timestamp.toInstant(ZoneOffset.of("Z")).toEpochMilli());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(metadata);
-    }
+    Instant getTimestamp();
 }
