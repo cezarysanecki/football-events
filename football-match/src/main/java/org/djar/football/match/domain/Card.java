@@ -1,47 +1,23 @@
 package org.djar.football.match.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
-
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(force = true)
-public class Card {
+class Card {
 
-  public enum Type {
-    YELLOW, RED
-  }
+    private final String id;
+    private final String matchId;
+    private final int minute;
+    private final String receiverId;
+    private final Type type;
 
-  private final String id;
-  private final String matchId;
-  private final int minute;
-  private final String receiverId;
-  private final Type type;
+    enum Type {
+        YELLOW, RED
+    }
 
-  Card(String id, String matchId, int minute, String receiverId, Type type) {
-    this.id = Objects.requireNonNull(id);
-    this.matchId = matchId;
-    this.minute = minute;
-    this.receiverId = receiverId;
-    this.type = type;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getMatchId() {
-    return matchId;
-  }
-
-  public int getMinute() {
-    return minute;
-  }
-
-  public String getReceiverId() {
-    return receiverId;
-  }
-
-  public Type getType() {
-    return type;
-  }
 }

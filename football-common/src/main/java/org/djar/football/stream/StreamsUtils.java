@@ -20,78 +20,78 @@ import java.util.stream.Stream;
 
 public class StreamsUtils {
 
-  private static final Logger logger = LoggerFactory.getLogger(StreamsUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(StreamsUtils.class);
 
-  private StreamsUtils() {
-  }
-
-  public static <V> Materialized<String, V, KeyValueStore<Bytes, byte[]>> materialized(String storeName,
-                                                                                       Serde<V> serde) {
-    return Materialized.<String, V, KeyValueStore<Bytes, byte[]>>as(storeName)
-        .withKeySerde(Serdes.String()).withValueSerde(serde);
-  }
-
-  public static String storeName(Class stored) {
-    return stored.getSimpleName().replaceAll("(.)(\\p{Upper}+)", "$1_$2").toLowerCase();
-  }
-
-  public static <E extends Event, D> void addProcessor(Topology topology, Class<E> eventType,
-                                                       EventProcessor<E, D> proc, String store) {
-    String topic = Topics.eventTopicName(eventType);
-    topology.addSource(eventType.getSimpleName() + "Source", Serdes.String().deserializer(),
-            new JsonPojoSerde<E>(eventType), topic)
-        .addProcessor(eventType.getSimpleName() + "Process",
-            () -> new ProcessorWrapper<E, D>(proc, topic, store),
-            eventType.getSimpleName() + "Source");
-  }
-
-  public static <D, E extends Event> void addStore(Topology topology, Class<D> domainType, String store,
-                                                   Class<E>... eventTypes) {
-    StoreBuilder<KeyValueStore<String, D>> matchStoreBuilder = Stores.keyValueStoreBuilder(
-            Stores.persistentKeyValueStore(store), Serdes.String(), new JsonPojoSerde<D>(domainType))
-        .withLoggingDisabled();
-
-    String[] processorNames = Stream.of(eventTypes)
-        .map(event -> event.getSimpleName() + "Process")
-        .collect(Collectors.toList()).toArray(new String[eventTypes.length]);
-
-    topology.addStateStore(matchStoreBuilder, processorNames);
-  }
-
-  @FunctionalInterface
-  public interface EventProcessor<E extends Event, D> {
-
-    void process(String eventId, E event, KeyValueStore<String, D> store);
-  }
-
-  private static class ProcessorWrapper<E extends Event, D> extends AbstractProcessor<String, E> {
-
-    private final String storeName;
-    private final String topic;
-    private final EventProcessor<E, D> processor;
-
-    private KeyValueStore<String, D> store;
-
-    private ProcessorWrapper(EventProcessor<E, D> processor, String topic, String storeName) {
-      this.processor = processor;
-      this.topic = topic;
-      this.storeName = storeName;
+    private StreamsUtils() {
     }
 
-    @Override
-    public void init(ProcessorContext context) {
-      store = (KeyValueStore<String, D>) context.getStateStore(storeName);
+    public static <V> Materialized<String, V, KeyValueStore<Bytes, byte[]>> materialized(String storeName,
+                                                                                         Serde<V> serde) {
+        return Materialized.<String, V, KeyValueStore<Bytes, byte[]>>as(storeName)
+                .withKeySerde(Serdes.String()).withValueSerde(serde);
     }
 
-    @Override
-    public void process(String eventId, E event) {
-      logger.debug("Event received from topic {}: {}->{}", topic, eventId, event);
-      processor.process(eventId, event, store);
+    public static String storeName(Class stored) {
+        return stored.getSimpleName().replaceAll("(.)(\\p{Upper}+)", "$1_$2").toLowerCase();
     }
 
-    @Override
-    public void close() {
-      store.close();
+    public static <E extends Event, D> void addProcessor(Topology topology, Class<E> eventType,
+                                                         EventProcessor<E, D> proc, String store) {
+        String topic = Topics.eventTopicName(eventType);
+        topology.addSource(eventType.getSimpleName() + "Source", Serdes.String().deserializer(),
+                        new JsonPojoSerde<E>(eventType), topic)
+                .addProcessor(eventType.getSimpleName() + "Process",
+                        () -> new ProcessorWrapper<E, D>(proc, topic, store),
+                        eventType.getSimpleName() + "Source");
     }
-  }
+
+    public static <D, E extends Event> void addStore(Topology topology, Class<D> domainType, String store,
+                                                     Class<E>... eventTypes) {
+        StoreBuilder<KeyValueStore<String, D>> matchStoreBuilder = Stores.keyValueStoreBuilder(
+                        Stores.persistentKeyValueStore(store), Serdes.String(), new JsonPojoSerde<D>(domainType))
+                .withLoggingDisabled();
+
+        String[] processorNames = Stream.of(eventTypes)
+                .map(event -> event.getSimpleName() + "Process")
+                .collect(Collectors.toList()).toArray(new String[eventTypes.length]);
+
+        topology.addStateStore(matchStoreBuilder, processorNames);
+    }
+
+    @FunctionalInterface
+    public interface EventProcessor<E extends Event, D> {
+
+        void process(String eventId, E event, KeyValueStore<String, D> store);
+    }
+
+    private static class ProcessorWrapper<E extends Event, D> extends AbstractProcessor<String, E> {
+
+        private final String storeName;
+        private final String topic;
+        private final EventProcessor<E, D> processor;
+
+        private KeyValueStore<String, D> store;
+
+        private ProcessorWrapper(EventProcessor<E, D> processor, String topic, String storeName) {
+            this.processor = processor;
+            this.topic = topic;
+            this.storeName = storeName;
+        }
+
+        @Override
+        public void init(ProcessorContext context) {
+            store = (KeyValueStore<String, D>) context.getStateStore(storeName);
+        }
+
+        @Override
+        public void process(String eventId, E event) {
+            logger.debug("Event received from topic {}: {}->{}", topic, eventId, event);
+            processor.process(eventId, event, store);
+        }
+
+        @Override
+        public void close() {
+            store.close();
+        }
+    }
 }

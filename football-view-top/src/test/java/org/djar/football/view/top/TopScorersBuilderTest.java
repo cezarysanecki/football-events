@@ -17,34 +17,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TopScorersBuilderTest {
 
-  private StreamsTester tester;
+    private StreamsTester tester;
 
-  @Before
-  public void setUp() {
-    tester = new StreamsTester(getClass().getName());
+    @Before
+    public void setUp() {
+        tester = new StreamsTester(getClass().getName());
 
-    StreamsBuilder streamsBuilder = new StreamsBuilder();
-    new TopScorersBuilder(streamsBuilder).build();
+        StreamsBuilder streamsBuilder = new StreamsBuilder();
+        new TopScorersBuilder(streamsBuilder).build();
 
-    Topology topology = streamsBuilder.build();
-    tester.setUp(topology);
-  }
+        Topology topology = streamsBuilder.build();
+        tester.setUp(topology);
+    }
 
-  @Test
-  public void testTopPlayers() {
-    tester.send(getClass().getResource("player-goals.json"), PlayerGoals.class,
-        Topics.viewTopicName(PlayerGoals.class), PlayerGoals::getPlayerId);
+    @Test
+    public void testTopPlayers() {
+        tester.send(getClass().getResource("player-goals.json"), PlayerGoals.class,
+                Topics.viewTopicName(PlayerGoals.class), PlayerGoals::getPlayerId);
 
-    ReadOnlyKeyValueStore<String, TopPlayers> store = tester.getStore(TopScorersBuilder.TOP_SCORERS_STORE);
-    List<PlayerGoals> players = store.get("topPlayers").getPlayers();
-    assertThat(players.get(0).getGoals()).isEqualTo(5);
-    assertThat(players.get(1).getGoals()).isEqualTo(4);
-    assertThat(players.get(2).getGoals()).isEqualTo(2);
-    assertThat(players.get(3).getGoals()).isEqualTo(1);
-  }
+        ReadOnlyKeyValueStore<String, TopPlayers> store = tester.getStore(TopScorersBuilder.TOP_SCORERS_STORE);
+        List<PlayerGoals> players = store.get("topPlayers").getPlayers();
+        assertThat(players.get(0).getGoals()).isEqualTo(5);
+        assertThat(players.get(1).getGoals()).isEqualTo(4);
+        assertThat(players.get(2).getGoals()).isEqualTo(2);
+        assertThat(players.get(3).getGoals()).isEqualTo(1);
+    }
 
-  @After
-  public void tearDown() throws Exception {
-    tester.close();
-  }
+    @After
+    public void tearDown() throws Exception {
+        tester.close();
+    }
 }

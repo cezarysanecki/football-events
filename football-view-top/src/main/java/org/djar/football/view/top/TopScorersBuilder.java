@@ -19,28 +19,28 @@ import static org.djar.football.stream.StreamsUtils.materialized;
  */
 public class TopScorersBuilder {
 
-  public static final String TOP_SCORERS_STORE = "top_scorers_store";
+    public static final String TOP_SCORERS_STORE = "top_scorers_store";
 
-  public static final String PLAYER_GOALS_TOPIC = Topics.viewTopicName(PlayerGoals.class);
-  public static final String TOP_SCORERS_TOPIC = Topics.viewTopicName(TopPlayers.class);
+    public static final String PLAYER_GOALS_TOPIC = Topics.viewTopicName(PlayerGoals.class);
+    public static final String TOP_SCORERS_TOPIC = Topics.viewTopicName(TopPlayers.class);
 
-  private final JsonPojoSerde<PlayerGoals> playerGoalsSerde = new JsonPojoSerde<>(PlayerGoals.class);
-  private final JsonPojoSerde<TopPlayers> topSerde = new JsonPojoSerde<>(TopPlayers.class);
+    private final JsonPojoSerde<PlayerGoals> playerGoalsSerde = new JsonPojoSerde<>(PlayerGoals.class);
+    private final JsonPojoSerde<TopPlayers> topSerde = new JsonPojoSerde<>(TopPlayers.class);
 
-  private final StreamsBuilder builder;
+    private final StreamsBuilder builder;
 
-  public TopScorersBuilder(StreamsBuilder builder) {
-    this.builder = builder;
-  }
+    public TopScorersBuilder(StreamsBuilder builder) {
+        this.builder = builder;
+    }
 
-  public void build() {
-    KTable<String, TopPlayers> top10Table = builder
-        .stream(PLAYER_GOALS_TOPIC, Consumed.with(Serdes.String(), playerGoalsSerde))
-        // create a single record that includes the top scorers
-        .groupBy((playerId, playerGoals) -> "topPlayers", Serialized.with(Serdes.String(), playerGoalsSerde))
-        .aggregate(() -> new TopPlayers(10), (playerId, playerStat, top10) -> top10.aggregate(playerStat),
-            materialized(TOP_SCORERS_STORE, topSerde));
+    public void build() {
+        KTable<String, TopPlayers> top10Table = builder
+                .stream(PLAYER_GOALS_TOPIC, Consumed.with(Serdes.String(), playerGoalsSerde))
+                // create a single record that includes the top scorers
+                .groupBy((playerId, playerGoals) -> "topPlayers", Serialized.with(Serdes.String(), playerGoalsSerde))
+                .aggregate(() -> new TopPlayers(10), (playerId, playerStat, top10) -> top10.aggregate(playerStat),
+                        materialized(TOP_SCORERS_STORE, topSerde));
 
-    top10Table.toStream().to(TOP_SCORERS_TOPIC, Produced.with(String(), topSerde));
-  }
+        top10Table.toStream().to(TOP_SCORERS_TOPIC, Produced.with(String(), topSerde));
+    }
 }

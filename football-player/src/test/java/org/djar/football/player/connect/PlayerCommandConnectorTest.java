@@ -20,37 +20,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PlayerCommandConnectorTest {
 
-  private StreamsTester tester;
-  private PlayerCommandConnector producer;
+    private StreamsTester tester;
+    private PlayerCommandConnector producer;
 
-  @Before
-  public void setUp() {
-    tester = new StreamsTester(getClass().getName());
+    @Before
+    public void setUp() {
+        tester = new StreamsTester(getClass().getName());
 
-    StreamsBuilder streamsBuilder = new StreamsBuilder();
+        StreamsBuilder streamsBuilder = new StreamsBuilder();
 
-    producer = new PlayerCommandConnector(new EventPublisher(null, getClass().getSimpleName(), 1));
-    producer.build(streamsBuilder);
+        producer = new PlayerCommandConnector(new EventPublisher(null, getClass().getSimpleName(), 1));
+        producer.build(streamsBuilder);
 
-    Topology topology = streamsBuilder.build();
-    tester.setUp(topology);
-  }
+        Topology topology = streamsBuilder.build();
+        tester.setUp(topology);
+    }
 
-  @Test
-  public void test() throws Exception {
-    String json = StreamUtils.copyToString(getClass().getResourceAsStream("player-inserted.json"),
-        Charset.defaultCharset());
-    tester.sendStringMessage(1L, json, "fb-connect.public.players");
-    ProducerRecord<String, PlayerStartedCareer> event = tester.read(Topics.eventTopicName(PlayerStartedCareer.class),
-        new StringDeserializer(), new JsonPojoSerde<>(PlayerStartedCareer.class));
+    @Test
+    public void test() throws Exception {
+        String json = StreamUtils.copyToString(getClass().getResourceAsStream("player-inserted.json"),
+                Charset.defaultCharset());
+        tester.sendStringMessage(1L, json, "fb-connect.public.players");
+        ProducerRecord<String, PlayerStartedCareer> event = tester.read(Topics.eventTopicName(PlayerStartedCareer.class),
+                new StringDeserializer(), new JsonPojoSerde<>(PlayerStartedCareer.class));
 
-    assertThat(event.key()).isEqualTo("1");
-    assertThat(event.value().getPlayerId()).isEqualTo("1");
-    assertThat(event.value().getName()).isEqualTo("Player One");
-  }
+        assertThat(event.key()).isEqualTo("1");
+        assertThat(event.value().getPlayerId()).isEqualTo("1");
+        assertThat(event.value().getName()).isEqualTo("Player One");
+    }
 
-  @After
-  public void tearDown() throws Exception {
-    tester.close();
-  }
+    @After
+    public void tearDown() throws Exception {
+        tester.close();
+    }
 }

@@ -9,14 +9,14 @@ import static org.djar.football.stream.StreamsUtils.addStore;
 
 public class DomainUpdater {
 
-  public static final String PLAYER_STORE = "player_store";
+    public static final String PLAYER_STORE = "player_store";
 
-  public void init(Topology topology) {
-    addProcessor(topology, PlayerStartedCareer.class, (eventId, event, store) -> {
-      Player player = new Player(event.getPlayerId(), event.getName());
-      store.put(player.getId(), player);
-    }, PLAYER_STORE);
+    public void init(Topology topology) {
+        addProcessor(topology, PlayerStartedCareer.class, (eventId, event, store) -> {
+            Player player = new Player(event.getPlayerId(), event.getName());
+            store.put(player.getId(), player);
+        }, PLAYER_STORE);
 
-    addStore(topology, Player.class, PLAYER_STORE, PlayerStartedCareer.class);
-  }
+        addStore(topology, Player.class, PLAYER_STORE, PlayerStartedCareer.class);
+    }
 }

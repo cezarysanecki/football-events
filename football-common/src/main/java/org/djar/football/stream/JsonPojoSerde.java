@@ -15,60 +15,60 @@ import java.util.Map;
 
 public class JsonPojoSerde<T> implements Serde<T>, Serializer<T>, Deserializer<T> {
 
-  private final ObjectMapper mapper;
-  private final Class<T> clazz;
+    private final ObjectMapper mapper;
+    private final Class<T> clazz;
 
-  public JsonPojoSerde() {
-    this(null);
-  }
-
-  public JsonPojoSerde(Class<T> clazz) {
-    this.clazz = clazz;
-    mapper = new ObjectMapper();
-    mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-    mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    // noinspection deprecation
-    mapper.registerModule(new JSR310Module());
-    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-  }
-
-  @Override
-  public void configure(Map<String, ?> configs, boolean isKey) {
-  }
-
-  @Override
-  public byte[] serialize(String topic, T data) {
-    try {
-      return mapper.writeValueAsBytes(data);
-    } catch (Exception e) {
-      throw new SerializationException("Error serializing " + data.getClass() + " " + data, e);
+    public JsonPojoSerde() {
+        this(null);
     }
-  }
 
-  @Override
-  public T deserialize(String topic, byte[] data) {
-    if (data == null) {
-      return null;
+    public JsonPojoSerde(Class<T> clazz) {
+        this.clazz = clazz;
+        mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        // noinspection deprecation
+        mapper.registerModule(new JSR310Module());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
-    try {
-      return mapper.readValue(data, clazz);
-    } catch (Exception e) {
-      throw new SerializationException("Error deserializing from " + new String(data), e);
+
+    @Override
+    public void configure(Map<String, ?> configs, boolean isKey) {
     }
-  }
 
-  @Override
-  public void close() {
-  }
+    @Override
+    public byte[] serialize(String topic, T data) {
+        try {
+            return mapper.writeValueAsBytes(data);
+        } catch (Exception e) {
+            throw new SerializationException("Error serializing " + data.getClass() + " " + data, e);
+        }
+    }
 
-  @Override
-  public Serializer<T> serializer() {
-    return this;
-  }
+    @Override
+    public T deserialize(String topic, byte[] data) {
+        if (data == null) {
+            return null;
+        }
+        try {
+            return mapper.readValue(data, clazz);
+        } catch (Exception e) {
+            throw new SerializationException("Error deserializing from " + new String(data), e);
+        }
+    }
 
-  @Override
-  public Deserializer<T> deserializer() {
-    return this;
-  }
+    @Override
+    public void close() {
+    }
+
+    @Override
+    public Serializer<T> serializer() {
+        return this;
+    }
+
+    @Override
+    public Deserializer<T> deserializer() {
+        return this;
+    }
 }

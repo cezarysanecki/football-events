@@ -1,18 +1,15 @@
 package org.djar.football.match.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@Getter
 @NoArgsConstructor(force = true)
-public class Team {
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class Team {
 
-  private final String clubId;
-
-  Team(String clubId) {
-    this.clubId = clubId;
-  }
-
-  public String getClubId() {
-    return clubId;
-  }
+    private final String clubId;
 
 }

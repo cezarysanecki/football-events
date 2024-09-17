@@ -13,48 +13,48 @@ import java.util.UUID;
 
 public class EventPublisher {
 
-  private static final Logger logger = LoggerFactory.getLogger(EventPublisher.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventPublisher.class);
 
-  private final KafkaProducer<String, Event> producer;
-  private final String processId;
-  private final int apiVersion;
+    private final KafkaProducer<String, Event> producer;
+    private final String processId;
+    private final int apiVersion;
 
-  public EventPublisher(KafkaProducer<String, Event> producer, String processId, int apiVersion) {
-    this.producer = producer;
-    this.processId = processId;
-    this.apiVersion = apiVersion;
-  }
-
-  public Mono<Void> fire(Event event) {
-    return Mono.create(sink -> {
-      fillOut(event);
-      String topic = Topics.eventTopicName(event.getClass());
-      ProducerRecord<String, Event> record = new ProducerRecord<>(topic, 0, event.getMetadata().getTimestamp(),
-          event.getAggId(), event);
-
-      producer.send(record, (metadata, exception) -> {
-        if (exception == null) {
-          sink.success();
-          logger.debug("New {} event created: {}", event.getClass().getSimpleName(), event.getAggId());
-        } else {
-          sink.error(exception);
-        }
-      });
-    });
-  }
-
-  public void fillOut(Event event) {
-    EventMetadata md = event.getMetadata();
-    md.setEventId(generateId());
-    md.setProcessId(processId);
-    md.setVersion(apiVersion);
-
-    if (md.getTimestamp() == 0) {
-      md.setTimestamp(System.currentTimeMillis());
+    public EventPublisher(KafkaProducer<String, Event> producer, String processId, int apiVersion) {
+        this.producer = producer;
+        this.processId = processId;
+        this.apiVersion = apiVersion;
     }
-  }
 
-  private String generateId() {
-    return UUID.randomUUID().toString();
-  }
+    public Mono<Void> fire(Event event) {
+        return Mono.create(sink -> {
+            fillOut(event);
+            String topic = Topics.eventTopicName(event.getClass());
+            ProducerRecord<String, Event> record = new ProducerRecord<>(topic, 0, event.getMetadata().getTimestamp(),
+                    event.getAggId(), event);
+
+            producer.send(record, (metadata, exception) -> {
+                if (exception == null) {
+                    sink.success();
+                    logger.debug("New {} event created: {}", event.getClass().getSimpleName(), event.getAggId());
+                } else {
+                    sink.error(exception);
+                }
+            });
+        });
+    }
+
+    public void fillOut(Event event) {
+        EventMetadata md = event.getMetadata();
+        md.setEventId(generateId());
+        md.setProcessId(processId);
+        md.setVersion(apiVersion);
+
+        if (md.getTimestamp() == 0) {
+            md.setTimestamp(System.currentTimeMillis());
+        }
+    }
+
+    private String generateId() {
+        return UUID.randomUUID().toString();
+    }
 }

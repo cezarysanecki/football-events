@@ -4,24 +4,24 @@ import java.util.Objects;
 
 public class Player {
 
-  private final String id;
-  private final String name;
+    private final String id;
+    private final String name;
 
-  public Player(String id, String name) {
-    this.id = Objects.requireNonNull(id);
-    this.name = name;
-  }
+    public Player(String id, String name) {
+        this.id = Objects.requireNonNull(id);
+        this.name = name;
+    }
 
-  public String getId() {
-    return id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  @Override
-  public String toString() {
-    return name;
-  }
+    @Override
+    public String toString() {
+        return name;
+    }
 }
