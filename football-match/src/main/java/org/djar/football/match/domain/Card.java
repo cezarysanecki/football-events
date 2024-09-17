@@ -1,7 +1,10 @@
 package org.djar.football.match.domain;
 
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 
+@NoArgsConstructor(force = true)
 public class Card {
 
   public enum Type {

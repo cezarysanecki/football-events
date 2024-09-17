@@ -1,5 +1,8 @@
 package org.djar.football.match.domain;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(force = true)
 public class Team {
 
   private final String clubId;

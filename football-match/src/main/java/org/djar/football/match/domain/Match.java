@@ -1,10 +1,13 @@
 package org.djar.football.match.domain;
 
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@NoArgsConstructor(force = true)
 public class Match {
 
   public enum State {
@@ -21,7 +24,6 @@ public class Match {
   private final List<Goal> homeGoals = new ArrayList<>();
   private final List<Goal> awayGoals = new ArrayList<>();
   private final List<Card> cards = new ArrayList<>();
-
 
   Match(String id, String leagueId, LocalDateTime date, Team homeTeam, Team awayTeam) {
     this.id = Objects.requireNonNull(id);
