@@ -22,8 +22,8 @@ public class DockerCompose {
 
     private static final Logger logger = LoggerFactory.getLogger(DockerCompose.class);
 
-    private static final String UP_COMMAND = "docker-compose up -d";
-    private static final String DOWN_COMMAND = "docker-compose down";
+    private static final String UP_COMMAND = "docker compose up -d";
+    private static final String DOWN_COMMAND = "docker compose down";
 
     private final Collection<Service> healthChecks = new ArrayList<>();
 
