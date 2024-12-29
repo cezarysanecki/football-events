@@ -6,7 +6,12 @@ import org.djar.football.match.domain.Match;
 import org.djar.football.match.domain.Player;
 import org.djar.football.match.domain.Season;
 import org.djar.football.match.repo.SeasonRepository;
-import org.djar.football.model.event.*;
+import org.djar.football.model.event.CardReceived;
+import org.djar.football.model.event.GoalScored;
+import org.djar.football.model.event.MatchFinished;
+import org.djar.football.model.event.MatchScheduled;
+import org.djar.football.model.event.MatchStarted;
+import org.djar.football.model.event.PlayerStartedCareer;
 
 import java.util.Objects;
 
